@@ -43,7 +43,7 @@ export const signin = async (req, res) => {
         return res.status(200).json({ 
             message: "User signed in successfully",
             user: {
-                userId: user._id,
+                _id: user._id,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
@@ -60,23 +60,4 @@ export const signin = async (req, res) => {
 export const signout = (_req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "User signed out successfully" });
-};
-
-export const getUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.userId);
-        if (!user) return res.status(404).json({ message: "User not found" });
-        return res.status(200).json({ 
-            user: {
-                userId: user._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                role: user.role
-            }
-        });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ message: error.message });
-    }
 };
