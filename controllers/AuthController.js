@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
     }
 };
 
-export const signin = async (req, res, next) => {
+export const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) return res.status(400).json({ message: "Email and password is required" });
@@ -56,7 +56,25 @@ export const signin = async (req, res, next) => {
 
 };
 
-export const signout = (req, res) => {
+export const signout = (_req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "User signed out successfully" });
+};
+
+export const getUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+        return res.status(200).json({ 
+            user: {
+                userId: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: error.message });
+    }
 };
