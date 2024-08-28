@@ -8,6 +8,12 @@ export const verifyToken = (req, res, next) => {
         if (err) return res.status(403).json({ message: "Invalid token" });
 
         req.userId = decoded.userId;
+        req.role = decoded.role;
         next();
     });
+};
+
+export const isAdmin = (req, res, next) => {
+    if (req.role !== "admin") return res.status(403).json({ message: "Forbidden" });
+    next();
 };
