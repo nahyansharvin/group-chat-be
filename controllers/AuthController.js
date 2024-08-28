@@ -4,18 +4,18 @@ import { compare } from "bcrypt";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000; // 3 days
 
-const createToken = (email, userId) => {
-    return jwt.sign({ email, userId }, process.env.JWT_SECRET, { expiresIn: maxAge });
+const createToken = (email, userId, role) => {
+    return jwt.sign({ email, userId, role }, process.env.JWT_SECRET, { expiresIn: maxAge });
 }
 
 export const signup = async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
+        const { firstName, lastName, email, password, role } = req.body;
         if (!firstName || !lastName || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        await User.create({ firstName, lastName, email, password });
+        await User.create({ firstName, lastName, email, password, role });
         res.status(201).json({ message: "User created successfully", user: firstName + " " + lastName });
     } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ export const signin = async (req, res) => {
         const isMatch = await compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
-        res.cookie("token", createToken(email, user._id), { 
+        res.cookie("token", createToken(email, user._id, user.role), { 
             httpOnly: true,
             maxAge,
             secure: true,
@@ -43,10 +43,11 @@ export const signin = async (req, res) => {
         return res.status(200).json({ 
             message: "User signed in successfully",
             user: {
+                userId: user._id,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                userId: user._id
+                role: user.role
             }
         });
     } catch (error) {
@@ -71,6 +72,7 @@ export const getUser = async (req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
+                role: user.role
             }
         });
     } catch (error) {
