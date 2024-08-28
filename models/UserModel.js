@@ -18,7 +18,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Password is required"]
+    },
+    role: {
+        type: String,
+        default: "user"
     }
+},
+{
+    timestamps: true
 });
 
 userSchema.pre("save", async function(next) {
