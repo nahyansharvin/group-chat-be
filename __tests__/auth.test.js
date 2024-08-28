@@ -1,27 +1,15 @@
 import request from "supertest";
 import app from "../app.js";
 import mongoose from "mongoose";
-import User from "../models/UserModel.js";
 
 let cookie;
 
 beforeAll(async () => {
     await mongoose.connect(process.env.TEST_DATABASE_URL)
-        .then(() => console.log("Test database connected"))
         .catch((error) => console.log("Databse error: ", error.message));
-    
-    // Create Admin User
-    await User.create({
-        firstName: "Test",
-        lastName: "Admin",
-        email: "admin1@gmail.com",
-        password: "Password@123",
-        role: "admin"
-    });
 });
 
 afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
     await mongoose.connection.close();
 });
 
@@ -47,6 +35,13 @@ describe("Auth routes", () => {
         .set('cookie', cookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("user")
+    });
+
+    it("Sign out", async () => {
+        const response = await request(app).post("/api/auth/signout")
+        .set('cookie', cookie)
+        expect(response.status).toBe(200)
+        expect(response.headers).toHaveProperty("set-cookie")
     });
     
 });
