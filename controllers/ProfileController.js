@@ -7,8 +7,17 @@ export const createUser = async (req, res) => {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        await User.create({ firstName, lastName, email, password, role });
-        res.status(201).json({ message: "User created successfully", user: firstName + " " + lastName });
+        const newUser = await User.create({ firstName, lastName, email, password, role });
+        res.status(201).json({ 
+            message: "User created successfully",
+            user:{
+                _id: newUser._id,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName,
+                email: newUser.email,
+                role: newUser.role
+            }
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: error.message });

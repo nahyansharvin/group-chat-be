@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "jest"
+  },
+  "jest": {
+    "detectOpenHandles": true,
+    "verbose": true,
+    "globalSetup": "<rootDir>/test-utils/setupJest.js",
+    "globalTeardown": "<rootDir>/test-utils/teardownJest.js"
   },
   "type": "module",
   "keywords": [],
@@ -21,6 +28,9 @@
     "mongoose": "^8.5.4"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "@babel/preset-env": "^7.25.4",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "supertest": "^7.0.0"
   }
 }
