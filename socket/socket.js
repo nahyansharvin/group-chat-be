@@ -25,8 +25,6 @@ const setupSocket = (server) => {
             .populate("sender", "_id firstName lastName email")
             .populate("receiver", "_id firstName lastName email");
 
-        console.log("Message to send: ", messageToSend);
-
         if (receiverSocket) io.to(receiverSocket).emit("message", messageToSend);
         if (senderSocket) io.to(senderSocket).emit("message", messageToSend);
     };
