@@ -10,10 +10,7 @@ export const getMessages = async (req, res) => {
                 { sender: user1, receiver: user2 },
                 { sender: user2, receiver: user1 }
             ]
-        })
-            .sort({ createdAt: 1 })
-            .populate("sender", "_id firstName lastName email")
-            .populate("receiver", "_id firstName lastName email");
+        }).sort({ createdAt: 1 });
 
         res.status(200).json(messages);
     } catch (error) {
