@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middlewares/AuthMiddleware.js";
-import { createGroup, deleteGroup, editGroup, searchGroups } from "../controllers/GroupController.js";
+import { addMembers, createGroup, deleteGroup, editGroup, removeMembers, searchGroups } from "../controllers/GroupController.js";
 
 const groupRouter = Router();
 
@@ -9,6 +9,8 @@ groupRouter.get("/search", searchGroups)
 groupRouter.post("/create-group", createGroup)
 groupRouter.patch("/edit-group/:groupId", editGroup)
 groupRouter.delete("/delete-group/:groupId", deleteGroup)
+groupRouter.patch("/add-members/:groupId", addMembers)
+groupRouter.patch("/remove-members/:groupId", removeMembers)
 
 
 export default groupRouter;
