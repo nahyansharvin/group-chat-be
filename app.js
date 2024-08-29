@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
 import profileRoutes from "./routes/ProfileRoutes.js";
 import messageRoutes from "./routes/MessageRoutes.js";
+import groupRouter from "./routes/GroupRoutes.js";
 
 dotenv.config();
 
@@ -23,5 +24,6 @@ app.get("/", (req, res) => res.send("Welcome to the Chat App API"));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", profileRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/groups", groupRouter);
 
 export default app;
