@@ -5,7 +5,7 @@ import { getMessages, markAsRead } from "../controllers/MessageController.js";
 const messageRoutes = Router();
 
 messageRoutes.use(verifyToken)
-messageRoutes.get("/get-messages/:id", getMessages)
+messageRoutes.get("/get-messages/:userId", getMessages)
 messageRoutes.patch("/mark-as-read", markAsRead)
 
 export default messageRoutes;
