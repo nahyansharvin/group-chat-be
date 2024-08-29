@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/AuthRoutes.js";
 import profileRoutes from "./routes/ProfileRoutes.js";
+import messageRoutes from "./routes/MessageRoutes.js";
 
 dotenv.config();
 
@@ -21,5 +22,6 @@ app.use(express.json());
 app.get("/", (req, res) => res.send("Welcome to the Chat App API"));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", profileRoutes);
+app.use("/api/messages", messageRoutes);
 
 export default app;
