@@ -7,6 +7,7 @@ const validateGroupAdmin = async (groupId, userId) => {
         const group = await Group.findById(groupId);
         if (!group) return { isValid: false, statusCode: 404, message: "Group with given Id not found" };
         if (group.admin.toString() !== userId) return { isValid: false, statusCode: 403, message: "You are not allowed to edit this group" };
+        return { isValid: true };
     } catch (error) {
         throw new Error(error.message);
     }
