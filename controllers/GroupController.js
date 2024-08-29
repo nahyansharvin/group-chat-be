@@ -65,3 +65,16 @@ export const deleteGroup = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const searchGroups = async (req, res) => {
+    try {
+        const { filter } = req.query;
+        if (!filter) return res.status(400).json({ message: "Search filter is required" });
+
+        const groups = await Group.find({ name: { $regex: filter, $options: "i" } });
+
+        res.status(200).json({ groups: groups });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
