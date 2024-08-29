@@ -11,8 +11,8 @@
   "jest": {
     "detectOpenHandles": true,
     "verbose": true,
-    "globalSetup": "<rootDir>/test-utils/setupJest.js",
-    "globalTeardown": "<rootDir>/test-utils/teardownJest.js"
+    "globalSetup": "<rootDir>/utils/test-utils/setupJest.js",
+    "globalTeardown": "<rootDir>/utils/test-utils/teardownJest.js"
   },
   "type": "module",
   "keywords": [],
