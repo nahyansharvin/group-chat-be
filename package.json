@@ -11,8 +11,8 @@
   "jest": {
     "detectOpenHandles": true,
     "verbose": true,
-    "globalSetup": "<rootDir>/test-utils/setupJest.js",
-    "globalTeardown": "<rootDir>/test-utils/teardownJest.js"
+    "globalSetup": "<rootDir>/utils/test-utils/setupJest.js",
+    "globalTeardown": "<rootDir>/utils/test-utils/teardownJest.js"
   },
   "type": "module",
   "keywords": [],
@@ -25,7 +25,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.5.4"
+    "mongoose": "^8.5.4",
+    "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
