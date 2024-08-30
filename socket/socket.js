@@ -1,7 +1,9 @@
 import { Server as SocketIOServer } from "socket.io";
-import { deleteDirectMessage, editMessage, sendDirectMessage } from "./DirectChat.js";
 import userSocktetMap from "./UserSocketsMap.js";
 import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
+import { sendDirectMessage } from "./DirectChat.js";
+import { sendGroupMessage } from "./GroupChat.js";
+import { deleteMessage, editMessage, markAsRead } from "./CommonChat.js";
 
 let io;
 
@@ -26,8 +28,11 @@ const setupSocket = (server) => {
         }
 
         socket.on(SOCKET_EVENTS.DIRECT_MESSAGE, (message) => sendDirectMessage(message, socket));
-        socket.on(SOCKET_EVENTS.DELETE_DIRECT_MESSAGE, (message) => deleteDirectMessage(message, socket));
+        socket.on(SOCKET_EVENTS.GROUP_MESSAGE, (message) => sendGroupMessage(message, socket));
+
         socket.on(SOCKET_EVENTS.EDIT_MESSAGE, (message) => editMessage(message, socket));
+        socket.on(SOCKET_EVENTS.DELETE_MESSAGE, (message) => deleteMessage(message, socket));
+        socket.on(SOCKET_EVENTS.MARK_AS_READ, (message) => markAsRead(message, socket));
 
         socket.on("disconnect", () => {
             console.log("Socket connection disconnected");

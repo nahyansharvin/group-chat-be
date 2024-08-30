@@ -1,3 +1,3 @@
-const usersocketMap = new Map();
+const userSocketMap = new Map();
 
-export default usersocketMap;
+export default userSocketMap;
