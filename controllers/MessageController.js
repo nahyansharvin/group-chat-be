@@ -18,6 +18,20 @@ export const getMessages = async (req, res) => {
     }
 };
 
+export const getGroupMessages = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+
+        const messages = await Message.find({ groupId })
+            .populate("sender", "_id firstName lastName email")
+            .sort({ createdAt: 1 });
+
+        res.status(200).json({ messages });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export const markAsRead = async (req, res) => {
     try {
         const user1 = req.userId;
