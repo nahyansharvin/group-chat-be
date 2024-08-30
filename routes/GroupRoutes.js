@@ -6,7 +6,7 @@ const groupRouter = Router();
 
 groupRouter.use(verifyToken)
 groupRouter.get("/get-groups", getUserGroups)
-groupRouter.get("/search", searchGroups)
+groupRouter.get("/search", searchGroups) //?fiter=groupname
 groupRouter.post("/create-group", createGroup)
 groupRouter.patch("/edit-group/:groupId", editGroup)
 groupRouter.delete("/delete-group/:groupId", deleteGroup)
