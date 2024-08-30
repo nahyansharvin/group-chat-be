@@ -16,10 +16,16 @@ const validateGroupAdmin = async (groupId, userId) => {
 
 export const createGroup = async (req, res) => {
     try {
-        const { name, members } = req.body;
+        let { name, members } = req.body;
         const admin = req.userId;
 
         if (!name) return res.status(400).json({ message: "Group name is required" });
+
+        if (members){
+            members.unshift(admin);
+        } else {
+            members = [admin];
+        }
 
         const validMembers = await User.find({ _id: { $in: members } });
         if (validMembers.length !== members.length) return res.status(400).json({ message: "Invalid members" });
