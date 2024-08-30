@@ -75,19 +75,6 @@ export const deleteGroup = async (req, res) => {
     }
 }
 
-export const searchGroups = async (req, res) => {
-    try {
-        const { filter } = req.query;
-        if (!filter) return res.status(400).json({ message: "Search filter is required" });
-
-        const groups = await Group.find({ name: { $regex: filter, $options: "i" } });
-
-        res.status(200).json({ groups: groups });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
 export const addMembers = async (req, res) => {
     try {
         const { members } = req.body;
@@ -132,6 +119,36 @@ export const removeMembers = async (req, res) => {
                 members: updatedGroup.members
             }
         });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const searchGroups = async (req, res) => {
+    try {
+        const { filter } = req.query;
+        if (!filter) return res.status(400).json({ message: "Search filter is required" });
+
+        const groups = await Group.find({ name: { $regex: filter, $options: "i" } });
+
+        res.status(200).json({ groups: groups });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getUserGroups = async (req, res) => {
+    try {
+        const { userId } = req;
+
+        const groups = await Group.find({
+            $or: [
+                { admin: userId },
+                { members: userId }
+            ]
+        }).sort({ updatedAt: -1 })
+
+        res.status(200).json({ groups: groups });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
