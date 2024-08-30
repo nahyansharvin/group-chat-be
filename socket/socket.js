@@ -1,5 +1,5 @@
 import { Server as SocketIOServer } from "socket.io";
-import sendDirectMessage from "./DirectChat.js";
+import { deleteDirectMessage, editMessage, sendDirectMessage } from "./DirectChat.js";
 import userSocktetMap from "./UserSocketsMap.js";
 import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
 
@@ -25,7 +25,9 @@ const setupSocket = (server) => {
             // throw new Error("User id not found in socket connection");
         }
 
-        socket.on(SOCKET_EVENTS.MESSAGE, sendDirectMessage);
+        socket.on(SOCKET_EVENTS.DIRECT_MESSAGE, (message) => sendDirectMessage(message, socket));
+        socket.on(SOCKET_EVENTS.DELETE_DIRECT_MESSAGE, (message) => deleteDirectMessage(message, socket));
+        socket.on(SOCKET_EVENTS.EDIT_MESSAGE, (message) => editMessage(message, socket));
 
         socket.on("disconnect", () => {
             console.log("Socket connection disconnected");
