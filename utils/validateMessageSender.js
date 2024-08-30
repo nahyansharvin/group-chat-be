@@ -1,4 +1,4 @@
-import Message from "../models/Message.js";
+import Message from "../models/MessagesModel.js";
 
 export const validateMessageSender = async (messageId, senderId) => {
     const message = await Message.findById(messageId);
