@@ -1,17 +1,7 @@
 import request from "supertest";
 import app from "../app.js";
-import mongoose from "mongoose";
 
 let cookie;
-
-beforeAll(async () => {
-    await mongoose.connect(process.env.TEST_DATABASE_URL)
-        .catch((error) => console.log("Databse error: ", error.message));
-});
-
-afterAll(async () => {
-    await mongoose.connection.close();
-});
 
 describe("Auth routes", () => {
     it("Should return 401 if not signed in", async () => {

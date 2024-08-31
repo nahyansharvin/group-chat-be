@@ -62,15 +62,15 @@ export const getAllUsers = async (req, res) => {
 
 export const searchUsers = async (req, res) => {
     try {
-        const { term } = req.query;
-        if (!term) return res.status(400).json({ message: "Search term is required" });
+        const { filter } = req.query;
+        if (!filter) return res.status(400).json({ message: "Search filter is required" });
         
         const users = await User.find({ 
             _id: { $ne: req.userId },
             $or: [
-                { firstName: { $regex: term, $options: "i" } },
-                { lastName: { $regex: term, $options: "i" } },
-                { email: { $regex: term, $options: "i" } }
+                { firstName: { $regex: filter, $options: "i" } },
+                { lastName: { $regex: filter, $options: "i" } },
+                { email: { $regex: filter, $options: "i" } }
             ]
         }, "_id firstName lastName email");
         return res.status(200).json({ users });
