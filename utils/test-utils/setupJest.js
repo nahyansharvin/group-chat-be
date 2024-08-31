@@ -15,8 +15,8 @@ export default async () => {
         password: "Password@123",
         role: "admin"
     });
-    global.user = user.firstName + " " + user.lastName;
-    global.userId = user._id.toString();
+    global.admin = user.firstName + " " + user.lastName;
+    global.adminId = user._id.toString();
 
     // Create User 2
     const user2 = await User.create({
@@ -25,8 +25,8 @@ export default async () => {
         email: "testuser@gmail.com",
         password: "Password@123"
     });
-    global.user2 = user2.firstName + " " + user2.lastName;
-    global.user2Id = user2._id.toString();
+    global.user = user2.firstName + " " + user2.lastName;
+    global.userId = user2._id.toString();
 
     // Signin Admin User
     const response = await request(app).post("/api/auth/signin")

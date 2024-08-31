@@ -7,8 +7,8 @@ import mongoose from "mongoose";
 
 const PORT = 5000;
 const adminCookie = global.adminCookie;
-const user1 = global.userId;
-const user2 = global.user2Id;
+const user1 = global.adminId;
+const user2 = global.userId;
 let clientSocket, client2Socket, messageId;
 
 beforeAll((done) => {
