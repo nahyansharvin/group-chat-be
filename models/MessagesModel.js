@@ -20,6 +20,10 @@ const messagesSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    likedBy: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users"
+    }],
     read: {
         type: Boolean,
         default: false
