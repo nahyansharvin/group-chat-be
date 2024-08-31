@@ -6,13 +6,25 @@ export default async () => {
         .catch((error) => console.log("Databse error: ", error.message));
 
     // Create Admin User
-    await User.create({
+    const user = await User.create({
         firstName: "Test",
         lastName: "Admin",
         email: "admin1@gmail.com",
         password: "Password@123",
         role: "admin"
     });
+    global.user = user.firstName + " " + user.lastName;
+    global.userId = user._id.toString();
+
+    // Create User 2
+    const user2 = await User.create({
+        firstName: "Test",
+        lastName: "User",
+        email: "testuser@gmail.com",
+        password: "Password@123"
+    });
+    global.user2 = user2.firstName + " " + user2.lastName;
+    global.user2Id = user2._id.toString();
 
     await mongoose.connection.close();
 }
