@@ -2,9 +2,10 @@ import request from "supertest";
 import mongoose from "mongoose"
 import User from "../../models/UserModel.js";
 import app from "../../app.js";
+import { TEST_DATABASE_URL } from "../../constants/TestConstants.js";
 
 export default async () => {
-    await mongoose.connect("mongodb://localhost:27017/live-chat-app-test")
+    await mongoose.connect(TEST_DATABASE_URL)
         .catch((error) => console.log("Databse error: ", error.message));
 
     // Create Admin User
