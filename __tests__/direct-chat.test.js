@@ -91,6 +91,28 @@ describe("Direct chat Sockets", () => {
         });
     })
 
+    it("Should like the message", (done) => {
+        clientSocket.on(SOCKET_EVENTS.LIKE_MESSAGE, (data) => {
+            expect(data).toHaveProperty("message")
+            expect(data).toHaveProperty("messageId", messageId)
+            done()
+        })
+        clientSocket.emit(SOCKET_EVENTS.LIKE_MESSAGE, {
+            messageId
+        })
+    })
+
+    it("Should unlike the message", (done) => {
+        clientSocket.on(SOCKET_EVENTS.UNLIKE_MESSAGE, (data) => {
+            expect(data).toHaveProperty("message")
+            expect(data).toHaveProperty("messageId", messageId)
+            done()
+        })
+        clientSocket.emit(SOCKET_EVENTS.UNLIKE_MESSAGE, {
+            messageId
+        })
+    })
+
     it("Should get Direct Chat List", async () => {
         const response = await request(app)
             .get("/api/chats")
