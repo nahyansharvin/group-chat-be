@@ -92,7 +92,7 @@ export const addMembers = async (req, res) => {
         const validMembers = await User.find({ _id: { $in: members } });
         if (validMembers.length !== members.length) return res.status(400).json({ message: "Invalid members" });
 
-        const updatedGroup = await Group.findByIdAndUpdate(groupId, { $push: { members: members } }, { new: true });
+        const updatedGroup = await Group.findByIdAndUpdate(groupId, { $addToSet: { members: members } }, { new: true });
 
         res.status(200).json({
             message: "Members added successfully",
