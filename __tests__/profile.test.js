@@ -35,7 +35,7 @@ describe("Profile routes", () => {
     });
 
     it("Search users", async () => {
-        const response = await request(app).get("/api/users/search?term=Test")
+        const response = await request(app).get("/api/users/search?filter=Test")
         .set('cookie', cookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("users")
