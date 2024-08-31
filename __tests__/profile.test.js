@@ -46,6 +46,13 @@ describe("Profile routes", () => {
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("users")
     });
+
+    it("Should delete user", async () => {
+        const response = await request(app).delete(`/api/users/delete/${createdUserId}`)
+        .set('cookie', adminCookie)
+        expect(response.status).toBe(200)
+        expect(response.body).toHaveProperty("message")
+    })
 });
 
 describe("Unauthorized access", () => {
