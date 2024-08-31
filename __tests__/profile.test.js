@@ -3,12 +3,11 @@ import app from "../app.js";
 import mongoose from "mongoose";
 
 let cookie;
-let userId;
+let createdUserId;
 
 beforeAll(async () => {
     await mongoose.connect(process.env.TEST_DATABASE_URL)
         .catch((error) => console.log("Databse error: ", error.message));
-    
 });
 
 afterAll(async () => {
@@ -46,18 +45,18 @@ describe("Profile routes", () => {
         const response = await request(app).post("/api/users/create-user")
         .set('cookie', cookie)
         .send({
-            firstName: "Test",
+            firstName: "Created",
             lastName: "User",
-            email: "testuser@gmail.com",
+            email: "createduser@gmail.com",
             password: "Password@123"
         })
         expect(response.status).toBe(201)
         expect(response.body).toHaveProperty("user")
-        userId = response.body.user._id;
+        createdUserId = response.body.user._id;
     });
 
     it("Update user", async () => {
-        const response = await request(app).patch("/api/users/update-user/" + userId)
+        const response = await request(app).patch("/api/users/update-user/" + createdUserId)
         .set('cookie', cookie)
         .send({
             firstName: "Updated",
