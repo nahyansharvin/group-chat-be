@@ -3,8 +3,8 @@ import app from "../app.js";
 import { io as ioClient } from "socket.io-client";
 import setupSocket, { io } from "../socket/socket.js";
 import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
+import { TEST_PORT } from "../constants/TestConstants.js";
 
-const PORT = 5000;
 const adminCookie = global.adminCookie;
 const user1 = global.adminId;
 const user2 = global.userId;
@@ -12,14 +12,14 @@ let clientSocket, client2Socket, messageId;
 
 //Setup Socket connection
 beforeAll((done) => {
-    const server = app.listen(PORT, () => {
+    const server = app.listen(TEST_PORT, () => {
         setupSocket(server);
-        clientSocket = ioClient(`http://localhost:${PORT}`, {
+        clientSocket = ioClient(`http://localhost:${TEST_PORT}`, {
             query: {
                 userId: user1
             }
         });
-        client2Socket = ioClient(`http://localhost:${PORT}`, {
+        client2Socket = ioClient(`http://localhost:${TEST_PORT}`, {
             query: {
                 userId: user2
             }
