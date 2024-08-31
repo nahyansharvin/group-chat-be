@@ -6,9 +6,10 @@ import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
 import mongoose from "mongoose";
 
 const PORT = 5000;
-let serverSocket, clientSocket, client2Socket, messageId;
-
-jest.setTimeout(20000);
+const adminCookie = global.adminCookie;
+const user1 = global.userId;
+const user2 = global.user2Id;
+let clientSocket, client2Socket, messageId;
 
 beforeAll((done) => {
     const server = app.listen(PORT, () => {
@@ -16,12 +17,12 @@ beforeAll((done) => {
         setupSocket(server);
         clientSocket = ioClient(`http://localhost:${PORT}`, {
             query: {
-                userId: global.userId
+                userId: user1
             }
         });
         client2Socket = ioClient(`http://localhost:${PORT}`, {
             query: {
-                userId: global.user2Id
+                userId: user2
             }
         });
         io.on("connection", (socket) => {
@@ -55,7 +56,7 @@ describe("Direct chat Sockets", () => {
             done()
         });
         clientSocket.emit(SOCKET_EVENTS.DIRECT_MESSAGE, {
-            receiver: global.user2Id,
+            receiver: user2,
             message
         });
     })
@@ -83,14 +84,14 @@ describe("Direct chat Sockets", () => {
             done()
         });
         client2Socket.emit(SOCKET_EVENTS.MARK_AS_READ, {
-            userId: global.userId
+            userId: user1
         });
     })
 
     it("Should get Direct Chat List", async () => {
         const response = await request(app)
             .get("/api/chats")
-            .set("Cookie", global.adminCookie)
+            .set("Cookie", adminCookie)
             .expect(200);
         expect(response.body).toHaveProperty("directChatList")
         expect(response.body.directChatList).toBeInstanceOf(Array)
@@ -98,8 +99,8 @@ describe("Direct chat Sockets", () => {
 
     it("Should get all Direct Messages", async () => {
         const response = await request(app)
-            .get(`/api/messages/get-user-messages/${global.user2Id}`)
-            .set("Cookie", global.adminCookie)
+            .get(`/api/messages/get-user-messages/${user2}`)
+            .set("Cookie", adminCookie)
             .expect(200);
         expect(response.body).toHaveProperty("messages")
         expect(response.body.messages).toBeInstanceOf(Array)
