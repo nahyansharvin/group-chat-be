@@ -50,7 +50,7 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const { userId } = req.params;
         const existingUser = await User.findById(userId);
         if (!existingUser) res.status(404).json({
             message: "User with given Id not found"
