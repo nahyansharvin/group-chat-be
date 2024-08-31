@@ -47,11 +47,9 @@ const setupSocket = (server) => {
         socket.on(SOCKET_EVENTS.UNLIKE_MESSAGE, (message) => unlikeMessage(message, socket));
 
         socket.on("disconnect", () => {
-            console.log("Socket connection disconnected");
             userSocktetMap.forEach((value, key) => {
                 if (value === socket.id) {
                     userSocktetMap.delete(key);
-                    console.log(`User ${key} disconnected`);
                 }
             });
         });

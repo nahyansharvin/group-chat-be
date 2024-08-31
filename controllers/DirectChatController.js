@@ -52,8 +52,6 @@ export const getDirectChatList = async (req, res) => {
             }
         ]);
 
-        console.log("Direct Chat List: ", directChatList)
-
         res.status(200).json({ directChatList });
     } catch (error) {
         res.status(500).json({ message: error.message });

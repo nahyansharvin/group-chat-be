@@ -18,7 +18,6 @@ const sendDirectMessage = async (message, socket) => {
         if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.DIRECT_MESSAGE, messageToSend);
         if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.DIRECT_MESSAGE, messageToSend);
     } catch (error) {
-        console.log("Error sending message: ", error.message);
         io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { error: "Error sending message", message: error.message });
     }
 

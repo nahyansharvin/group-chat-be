@@ -36,7 +36,6 @@ export const signin = async (req, res) => {
             }
         });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 
@@ -53,7 +52,6 @@ export const getCurrentUser = async (req, res) => {
         if (!user) return res.status(404).json({ message: "User not found" });
         return res.status(200).json({ user });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 };

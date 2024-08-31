@@ -51,7 +51,6 @@ describe("Group routes", () => {
         .send({
             members: [userToAdd]
         })
-        console.log("response", response.body)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("data")
         expect(response.body.data).toHaveProperty("members")

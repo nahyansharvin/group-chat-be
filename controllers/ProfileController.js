@@ -19,7 +19,6 @@ export const createUser = async (req, res) => {
             }
         });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 };
@@ -45,7 +44,6 @@ export const updateUser = async (req, res) => {
             }
         });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 }
@@ -55,7 +53,6 @@ export const getAllUsers = async (req, res) => {
         const users = await User.find({ _id: { $ne: req.userId } }, "_id firstName lastName email role");
         return res.status(200).json({ users });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 };
@@ -75,7 +72,6 @@ export const searchUsers = async (req, res) => {
         }, "_id firstName lastName email");
         return res.status(200).json({ users });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ message: error.message });
     }
 }
