@@ -3,9 +3,6 @@ import User from "../models/UserModel.js";
 export const createUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, role } = req.body;
-        if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
 
         const newUser = await User.create({ firstName, lastName, email, password, role });
         res.status(201).json({
@@ -19,6 +16,9 @@ export const createUser = async (req, res) => {
             }
         });
     } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ message: "Email already exists" });
+        }
         return res.status(500).json({ message: error.message });
     }
 };
@@ -27,6 +27,9 @@ export const updateUser = async (req, res) => {
     try {
         const { firstName, lastName, email, password, role } = req.body;
         const { userId } = req.params;
+
+        const existingUser = await User.findById(userId);
+        if (!existingUser) return res.status(404).json({ message: "User with given Id not found" });
 
         const newUser = await User.findByIdAndUpdate(
             userId,
@@ -52,7 +55,7 @@ export const deleteUser = async (req, res) => {
     try {
         const { userId } = req.params;
         const existingUser = await User.findById(userId);
-        if (!existingUser) res.status(404).json({
+        if (!existingUser) return res.status(404).json({
             message: "User with given Id not found"
         })
 
@@ -68,7 +71,7 @@ export const deleteUser = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await User.find({ _id: { $ne: req.userId } }, "_id firstName lastName email role");
+        const users = await User.find({ _id: { $ne: req.userId } }, "_id firstName lastName email");
         return res.status(200).json({ users });
     } catch (error) {
         return res.status(500).json({ message: error.message });
