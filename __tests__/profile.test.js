@@ -6,7 +6,7 @@ const adminCookie = global.adminCookie;
 const userCookie = global.userCookie;
 
 describe("Profile routes", () => {
-    it("Create user", async () => {
+    it("Should create new user", async () => {
         const response = await request(app).post("/api/users/create-user")
         .set('cookie', adminCookie)
         .send({
@@ -20,7 +20,7 @@ describe("Profile routes", () => {
         createdUserId = response.body.user._id;
     });
 
-    it("Update user", async () => {
+    it("Should update user", async () => {
         const response = await request(app).patch("/api/users/update-user/" + createdUserId)
         .set('cookie', adminCookie)
         .send({
@@ -33,14 +33,14 @@ describe("Profile routes", () => {
         expect(response.body.user.email).toBe("updateduser@gmail.com")
     });
     
-    it("Get all users", async () => {
+    it("Should get all users", async () => {
         const response = await request(app).get("/api/users/all-users")
         .set('cookie', userCookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("users")
     });
 
-    it("Search users", async () => {
+    it("Should search users", async () => {
         const response = await request(app).get("/api/users/search?filter=Test")
         .set('cookie', userCookie)
         expect(response.status).toBe(200)
