@@ -12,9 +12,10 @@ afterAll(async () => {
     await mongoose.connection.close();
 });
 
-let cookie;
+const userCookie = global.userCookie;
+const userToAdd = global.adminId;
 let groupId;
-let userId;
+
 describe("Group routes", () => {
     it("Sign in as admin", async () => {
         const response = await request(app).post("/api/auth/signin")
@@ -29,7 +30,7 @@ describe("Group routes", () => {
 
     it("Create a new group", async () => {
         const response = await request(app).post("/api/groups/create-group")
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         .send({
             name: "New Group",
         })
@@ -41,7 +42,7 @@ describe("Group routes", () => {
 
     it("Edit group", async () => {
         const response = await request(app).patch(`/api/groups/edit-group/${groupId}`)
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         .send({
             name: "Edited Group",
         })
@@ -52,7 +53,7 @@ describe("Group routes", () => {
 
     it("Get all groups", async () => {
         const response = await request(app).get("/api/groups/get-groups")
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("groups")
         expect(response.body.groups).toBeInstanceOf(Array)
@@ -60,31 +61,17 @@ describe("Group routes", () => {
 
     it("Search groups", async () => {
         const response = await request(app).get("/api/groups/search?filter=edi")
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("groups")
         expect(response.body.groups).toBeInstanceOf(Array)
     });
 
-    it("Create user", async () => {
-        const response = await request(app).post("/api/users/create-user")
-        .set('cookie', cookie)
-        .send({
-            firstName: "Group",
-            lastName: "Member",
-            email: "groupmember@gmail.com",
-            password: "Password@123"
-        })
-        expect(response.status).toBe(201)
-        expect(response.body).toHaveProperty("user")
-        userId = response.body.user._id;
-    });
-
     it("Add members to group", async () => {
         const response = await request(app).patch(`/api/groups/add-members/${groupId}`)
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         .send({
-            members: [userId]
+            members: [userToAdd]
         })
         console.log("response", response.body)
         expect(response.status).toBe(200)
@@ -95,9 +82,9 @@ describe("Group routes", () => {
 
     it("Remove members from group", async () => {
         const response = await request(app).patch(`/api/groups/remove-members/${groupId}`)
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         .send({
-            members: ["60b9d9c6c6b5d40015f9d5f5"]
+            members: [userToAdd]
         })
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("data")
@@ -107,7 +94,7 @@ describe("Group routes", () => {
 
     it("Delete group", async () => {
         const response = await request(app).delete(`/api/groups/delete-group/${groupId}`)
-        .set('cookie', cookie)
+        .set('cookie', userCookie)
         expect(response.status).toBe(200)
         expect(response.body).toHaveProperty("message", "Group deleted successfully")
     });
