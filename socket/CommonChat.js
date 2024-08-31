@@ -12,7 +12,6 @@ const editMessage = async (message, socket) => {
 
     try {
         const existingMessage = await validateMessageSender(message.messageId, sender);
-        const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
 
         const editedMessage = await Message.findByIdAndUpdate(message.messageId, {
             message: message.message
@@ -27,11 +26,11 @@ const editMessage = async (message, socket) => {
             });
         } else if (existingMessage.receiver) {
             // If the message is a direct message
+            const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
             if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.EDIT_MESSAGE, editedMessage);
             if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.EDIT_MESSAGE, editedMessage);
         }
     } catch (error) {
-        console.log("Error editing message: ", error.message);
         io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { error: "Error editing message", message: error.message });
     }
 }
@@ -42,8 +41,6 @@ const deleteMessage = async (message, socket) => {
 
     try {
         const existingMessage = await validateMessageSender(message.messageId, sender);
-        const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
-
 
         await Message.findByIdAndDelete(message.messageId);
 
@@ -63,12 +60,12 @@ const deleteMessage = async (message, socket) => {
             });
         } else {
             // If the message is a direct message
+            const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
             if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.DELETE_MESSAGE, response);
             if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.DELETE_MESSAGE, response);
         }
 
     } catch (error) {
-        console.log("Error deleting message: ", error.message);
         if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { message: "Error deleting message", data: error.message });
     }
 }
@@ -92,13 +89,86 @@ const markAsRead = async (message, socket) => {
         if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.MARK_AS_READ, response);
         if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.MARK_AS_READ, response);
     } catch (error) {
-        console.log("Error marking message as read: ", error.message);
         io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { error: "Error marking message as read", message: error.message });
+    }
+}
+
+const likeMessage = async (message, socket) => {
+    const sender = socket.handshake.query.userId;
+    const senderSocket = userSocketMap.get(sender);
+
+    try {
+        const existingMessage = await Message.findById(message.messageId);
+        if(!existingMessage) throw new Error("Message with given Id not found");
+        if (existingMessage.likedBy.includes(sender)) throw new Error("You have already liked this message");
+
+        const updatedMessage = await Message.findByIdAndUpdate(message.messageId, {
+            $addToSet: { likedBy: sender }
+        }, { new: true });
+
+        const response = {
+            message: "Message liked successfully",
+            messageId: updatedMessage._id,
+        }
+
+        if (existingMessage.groupId) {
+            // If the message is a group message
+            const group = await Group.findById(existingMessage.groupId).populate("members", "_id");
+            group.members.forEach(member => {
+                const memberSocket = userSocketMap.get(member._id.toString());
+                if (memberSocket) io.to(memberSocket).emit(SOCKET_EVENTS.LIKE_MESSAGE, response);
+            });
+        } else {
+            // If the message is a direct message
+            const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
+            if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.LIKE_MESSAGE, response);
+            if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.LIKE_MESSAGE, response);
+        }
+    } catch (error) {
+        io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { error: "Error liking message", message: error.message });
+    }
+}
+
+const unlikeMessage = async (message, socket) => {
+    const sender = socket.handshake.query.userId;
+    const senderSocket = userSocketMap.get(sender);
+
+    try {
+        const existingMessage = await Message.findById(message.messageId);
+        if(!existingMessage) throw new Error("Message with given Id not found");
+        if (!existingMessage.likedBy.includes(sender)) throw new Error("You have not liked this message");
+
+        const updatedMessage = await Message.findByIdAndUpdate(message.messageId, {
+            $pull: { likedBy: sender }
+        }, { new: true });
+
+        const response = {
+            message: "Message unliked successfully",
+            messageId: updatedMessage._id,
+        }
+
+        if (existingMessage.groupId) {
+            // If the message is a group message
+            const group = await Group.findById(existingMessage.groupId).populate("members", "_id");
+            group.members.forEach(member => {
+                const memberSocket = userSocketMap.get(member._id.toString());
+                if (memberSocket) io.to(memberSocket).emit(SOCKET_EVENTS.UNLIKE_MESSAGE, response);
+            });
+        } else {
+            // If the message is a direct message
+            const receiverSocket = userSocketMap.get(existingMessage.receiver.toString());
+            if (receiverSocket) io.to(receiverSocket).emit(SOCKET_EVENTS.UNLIKE_MESSAGE, response);
+            if (senderSocket) io.to(senderSocket).emit(SOCKET_EVENTS.UNLIKE_MESSAGE, response);
+        }
+    } catch (error) {
+        io.to(senderSocket).emit(SOCKET_EVENTS.ERROR, { error: "Error unliking message", message: error.message });
     }
 }
 
 export {
     editMessage,
     deleteMessage,
-    markAsRead
+    markAsRead,
+    likeMessage,
+    unlikeMessage,
 }

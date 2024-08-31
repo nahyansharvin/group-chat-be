@@ -3,7 +3,7 @@ import userSocktetMap from "./UserSocketsMap.js";
 import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
 import { sendDirectMessage } from "./DirectChat.js";
 import { sendGroupMessage } from "./GroupChat.js";
-import { deleteMessage, editMessage, markAsRead } from "./CommonChat.js";
+import { deleteMessage, editMessage, likeMessage, markAsRead, unlikeMessage } from "./CommonChat.js";
 
 let io;
 
@@ -33,6 +33,8 @@ const setupSocket = (server) => {
         socket.on(SOCKET_EVENTS.EDIT_MESSAGE, (message) => editMessage(message, socket));
         socket.on(SOCKET_EVENTS.DELETE_MESSAGE, (message) => deleteMessage(message, socket));
         socket.on(SOCKET_EVENTS.MARK_AS_READ, (message) => markAsRead(message, socket));
+        socket.on(SOCKET_EVENTS.LIKE_MESSAGE, (message) => likeMessage(message, socket));
+        socket.on(SOCKET_EVENTS.UNLIKE_MESSAGE, (message) => unlikeMessage(message, socket));
 
         socket.on("disconnect", () => {
             console.log("Socket connection disconnected");
