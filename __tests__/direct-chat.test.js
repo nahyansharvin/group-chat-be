@@ -13,7 +13,6 @@ let clientSocket, client2Socket, messageId;
 
 beforeAll((done) => {
     const server = app.listen(PORT, () => {
-        // console.log(`Server is running on port ${PORT}`);
         setupSocket(server);
         clientSocket = ioClient(`http://localhost:${PORT}`, {
             query: {
@@ -24,9 +23,6 @@ beforeAll((done) => {
             query: {
                 userId: user2
             }
-        });
-        io.on("connection", (socket) => {
-            serverSocket = socket;
         });
         clientSocket.on("connect", done);
     });
@@ -74,6 +70,18 @@ describe("Direct chat Sockets", () => {
         clientSocket.emit(SOCKET_EVENTS.EDIT_MESSAGE, {
             messageId: messageId,
             message: editedMessage
+        });
+    })
+
+    it("Sould not be able to edit message sent by other user", (done) => {
+        client2Socket.on(SOCKET_EVENTS.ERROR, (data) => {
+            expect(data.error).toBe("Error editing message")
+            expect(data.message).toBe("You are not allowed to edit others' message")
+            done()
+        });
+        client2Socket.emit(SOCKET_EVENTS.EDIT_MESSAGE, {
+            messageId: messageId,
+            message: "This is an edited message."
         });
     })
 
