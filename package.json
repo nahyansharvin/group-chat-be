@@ -12,7 +12,8 @@
     "detectOpenHandles": true,
     "verbose": true,
     "globalSetup": "<rootDir>/utils/test-utils/setupJest.js",
-    "globalTeardown": "<rootDir>/utils/test-utils/teardownJest.js"
+    "globalTeardown": "<rootDir>/utils/test-utils/teardownJest.js",
+    "setupFilesAfterEnv": ["<rootDir>/utils/test-utils/forEachTest.js"]
   },
   "type": "module",
   "keywords": [],
