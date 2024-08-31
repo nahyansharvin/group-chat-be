@@ -99,11 +99,11 @@ These events facilitate real-time communication:
 
 - `"direct-message"`: Send a direct message to another user.
 - `"group-message"`: Send a message to a group.
-- `"edit-message"`: Edit a message (restrictions may apply).
-- `"delete-message"`: Delete a message (restrictions may apply).
+- `"edit-message"`: Edit a message.
+- `"delete-message"`: Delete a message.
 - `"mark-as-read"`: Mark messages as read.
-- `"like-message"`: Like a message (optional).
-- `"unlike-message"`: Unlike a message (optional).
+- `"like-message"`: Like a message.
+- `"unlike-message"`: Unlike a message.
 - `"error"`: Handles potential errors during communication.
 
 ### Testing:
