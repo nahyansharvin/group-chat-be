@@ -4,6 +4,7 @@ import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
 import { sendDirectMessage } from "./DirectChat.js";
 import { sendGroupMessage } from "./GroupChat.js";
 import { deleteMessage, editMessage, likeMessage, markAsRead, unlikeMessage } from "./CommonChat.js";
+import User from "../models/UserModel.js";
 
 let io;
 
@@ -15,16 +16,25 @@ const setupSocket = (server) => {
         }
     });
 
-    io.on("connection", (socket) => {
-        // console.log(`Socket connection established with id ${socket.id}`);
+    io.on("connection", async (socket) => {
         const userId = socket.handshake.query.userId;
 
         if (userId) {
+            const existingUser = await User.findById(userId);
+            if (!existingUser) {
+                io.to(socket.id).emit(SOCKET_EVENTS.ERROR, {
+                    error: "Invalid user",
+                    message: "User not found"
+                });
+                socket.disconnect();
+            }
             userSocktetMap.set(userId, socket.id);
-            console.log(`User ${userId} connected with socket ${socket.id}`);
         } else {
-            console.log("User id not found in socket connection");
-            // throw new Error("User id not found in socket connection");
+            io.to(socket.id).emit(SOCKET_EVENTS.ERROR, {
+                error: "Invalid user",
+                message: "Please send a userId in the query params"
+            });
+            socket.disconnect();
         }
 
         socket.on(SOCKET_EVENTS.DIRECT_MESSAGE, (message) => sendDirectMessage(message, socket));
