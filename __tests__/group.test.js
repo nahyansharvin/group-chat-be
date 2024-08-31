@@ -6,17 +6,6 @@ const userToAdd = global.adminId;
 let groupId;
 
 describe("Group routes", () => {
-    it("Sign in as admin", async () => {
-        const response = await request(app).post("/api/auth/signin")
-        .send({ 
-            email: "admin1@gmail.com",
-            password: "Password@123"
-        })
-        expect(response.status).toBe(200)
-        expect(response.body).toHaveProperty("user")
-        cookie = response.headers["set-cookie"];
-    });
-
     it("Create a new group", async () => {
         const response = await request(app).post("/api/groups/create-group")
         .set('cookie', userCookie)
