@@ -130,6 +130,30 @@ export const removeMembers = async (req, res) => {
     }
 }
 
+export const leaveGroup = async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const { userId } = req;
+
+        const group = await Group.findById(groupId);
+        if (!group) return res.status(404).json({ message: "Group with given Id not found" });
+        if (!group.members.includes(userId)) return res.status(400).json({ message: "You are not a member of this group" });
+        if (group.admin.toString() === userId) return res.status(403).json({ message: "Admin cannot leave the group" });
+
+        const updatedGroup = await Group.findByIdAndUpdate(groupId, { $pull: { members: userId } });
+
+        res.status(200).json({
+            message: "You have left the group successfully",
+            data: {
+                groupId: updatedGroup._id,
+                name: updatedGroup.name,
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export const searchGroups = async (req, res) => {
     try {
         const { filter } = req.query;
