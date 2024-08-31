@@ -46,13 +46,13 @@ export const createGroup = async (req, res) => {
 
 export const editGroup = async (req, res) => {
     try {
-        const { name, members } = req.body;
+        const { name } = req.body;
         const { groupId } = req.params;
 
         const validateGroup = await validateGroupAdmin(groupId, req.userId);
         if (!validateGroup.isValid) return res.status(validateGroup.statusCode).json({ message: validateGroup.message });
 
-        const updatedGroup = await Group.findByIdAndUpdate(groupId, { name, members }, { new: true });
+        const updatedGroup = await Group.findByIdAndUpdate(groupId, { name }, { new: true });
 
         res.status(200).json({
             message: "Group updated successfully",

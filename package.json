@@ -13,7 +13,9 @@
     "verbose": true,
     "globalSetup": "<rootDir>/utils/test-utils/setupJest.js",
     "globalTeardown": "<rootDir>/utils/test-utils/teardownJest.js",
-    "setupFilesAfterEnv": ["<rootDir>/utils/test-utils/forEachTest.js"]
+    "setupFilesAfterEnv": [
+      "<rootDir>/utils/test-utils/forEachTest.js"
+    ]
   },
   "type": "module",
   "keywords": [],
@@ -27,7 +29,8 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.4",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
