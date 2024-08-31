@@ -42,7 +42,7 @@ afterAll(async () => {
     await mongoose.connection.close()
 });
 
-describe("Chat Sockets", () => {
+describe("Direct chat Sockets", () => {
     it("should send direct message from Admin to User", (done) => {
         const message = "This is a test message sent from Admin to User."
         clientSocket.on(SOCKET_EVENTS.DIRECT_MESSAGE, (data) => {
@@ -94,6 +94,15 @@ describe("Chat Sockets", () => {
             .expect(200);
         expect(response.body).toHaveProperty("directChatList")
         expect(response.body.directChatList).toBeInstanceOf(Array)
+    })
+
+    it("Should get all Direct Messages", async () => {
+        const response = await request(app)
+            .get(`/api/messages/get-user-messages/${global.user2Id}`)
+            .set("Cookie", global.adminCookie)
+            .expect(200);
+        expect(response.body).toHaveProperty("messages")
+        expect(response.body.messages).toBeInstanceOf(Array)
     })
 
     it("Should delete message", (done) => {
