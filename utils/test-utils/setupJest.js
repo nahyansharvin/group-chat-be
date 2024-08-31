@@ -1,5 +1,7 @@
+import request from "supertest";
 import mongoose from "mongoose"
 import User from "../../models/UserModel.js";
+import app from "../../app.js";
 
 export default async () => {
     await mongoose.connect("mongodb://localhost:27017/live-chat-app-test")
@@ -25,6 +27,23 @@ export default async () => {
     });
     global.user2 = user2.firstName + " " + user2.lastName;
     global.user2Id = user2._id.toString();
+
+    // Signin Admin User
+    const response = await request(app).post("/api/auth/signin")
+        .send({
+            email: "admin1@gmail.com",
+            password: "Password@123"
+        })
+    global.adminCookie = response.headers["set-cookie"];
+
+    // Signin Normal User
+    const response2 = await request(app).post("/api/auth/signin")
+        .send({
+            email: "testuser@gmail.com",
+            password: "Password@123"
+        })
+    global.userCookie = response2.headers["set-cookie"];
+
 
     await mongoose.connection.close();
 }
