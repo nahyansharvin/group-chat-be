@@ -1,19 +1,9 @@
 import request from "supertest";
 import app from "../app.js";
-import mongoose from "mongoose";
 
 let createdUserId;
 const adminCookie = global.adminCookie;
 const userCookie = global.userCookie;
-
-beforeAll(async () => {
-    await mongoose.connect(process.env.TEST_DATABASE_URL)
-        .catch((error) => console.log("Databse error: ", error.message));
-});
-
-afterAll(async () => {
-    await mongoose.connection.close();
-});
 
 describe("Profile routes", () => {
     it("Create user", async () => {

@@ -1,16 +1,5 @@
 import request from "supertest";
 import app from "../app.js";
-import mongoose from "mongoose";
-
-
-beforeAll(async () => {
-    await mongoose.connect(process.env.TEST_DATABASE_URL)
-    .catch((error) => console.log("Databse error: ", error.message));
-});
-
-afterAll(async () => {
-    await mongoose.connection.close();
-});
 
 const userCookie = global.userCookie;
 const userToAdd = global.adminId;

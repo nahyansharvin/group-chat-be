@@ -3,7 +3,6 @@ import app from "../app.js";
 import { io as ioClient } from "socket.io-client";
 import setupSocket, { io } from "../socket/socket.js";
 import { SOCKET_EVENTS } from "../constants/SocketConstants.js";
-import mongoose from "mongoose";
 
 const PORT = 5000;
 const adminCookie = global.adminCookie;
@@ -11,6 +10,7 @@ const user1 = global.adminId;
 const user2 = global.userId;
 let clientSocket, client2Socket, messageId;
 
+//Setup Socket connection
 beforeAll((done) => {
     const server = app.listen(PORT, () => {
         setupSocket(server);
@@ -25,18 +25,13 @@ beforeAll((done) => {
             }
         });
         clientSocket.on("connect", done);
+        client2Socket.on("connect", done);
     });
 });
-beforeAll(async () => {
-    await mongoose.connect(process.env.TEST_DATABASE_URL)
-        .catch((error) => console.log("Databse error: ", error.message));
-});
-
 afterAll(async () => {
     io.close()
     clientSocket.disconnect()
     client2Socket.disconnect()
-    await mongoose.connection.close()
 });
 
 describe("Direct chat Sockets", () => {
