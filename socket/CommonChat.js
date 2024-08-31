@@ -23,7 +23,7 @@ const editMessage = async (message, socket) => {
             const group = await Group.findById(existingMessage.groupId).populate("members", "_id");
             group.members.forEach(member => {
                 const memberSocket = userSocktetMap.get(member._id.toString());
-                if (memberSocket) io.to(memberSocket).emit(SOCKET_EVENTS.GROUP_MESSAGE, messageToSend);
+                if (memberSocket) io.to(memberSocket).emit(SOCKET_EVENTS.EDIT_MESSAGE, editedMessage);
             });
         } else if (existingMessage.receiver) {
             // If the message is a direct message
